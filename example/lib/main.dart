@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-
 import 'package:alphabet_scroll_view/alphabet_scroll_view.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,7 +20,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -134,16 +133,8 @@ class _MyHomePageState extends State<MyHomePage> {
               // isAlphabetsFiltered: false,
               alignment: LetterAlignment.right,
               itemExtent: 50,
-              unselectedTextStyle: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.normal,
-                color: Colors.black
-              ),
-              selectedTextStyle: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red
-              ),
+              unselectedTextStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.normal, color: Colors.black),
+              selectedTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),
               overlayWidget: (value) => Stack(
                 alignment: Alignment.center,
                 children: [

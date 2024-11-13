@@ -1,6 +1,7 @@
 import 'package:alphabet_scroll_view/src/meta.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 enum LetterAlignment { left, right }
 
@@ -102,8 +103,7 @@ class AlphabetScrollView extends StatefulWidget {
 
 class _AlphabetScrollViewState extends State<AlphabetScrollView> {
   void init() {
-    widget.list
-        .sort((x, y) => x.key.toLowerCase().compareTo(y.key.toLowerCase()));
+    widget.list.sort((x, y) => x.key.toLowerCase().compareTo(y.key.toLowerCase()));
     _list = widget.list;
     setState(() {});
 
@@ -111,8 +111,8 @@ class _AlphabetScrollViewState extends State<AlphabetScrollView> {
     if (widget.isAlphabetsFiltered) {
       List<String> temp = [];
       alphabets.forEach((letter) {
-        AlphaModel? firstAlphabetElement = _list.firstWhereOrNull(
-            (item) => item.key.toLowerCase().startsWith(letter.toLowerCase()));
+        AlphaModel? firstAlphabetElement =
+            _list.firstWhereOrNull((item) => item.key.toLowerCase().startsWith(letter.toLowerCase()));
         if (firstAlphabetElement != null) {
           temp.add(letter);
         }
@@ -148,8 +148,7 @@ class _AlphabetScrollViewState extends State<AlphabetScrollView> {
   @override
   void didUpdateWidget(covariant AlphabetScrollView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.list != widget.list ||
-        oldWidget.isAlphabetsFiltered != widget.isAlphabetsFiltered) {
+    if (oldWidget.list != widget.list || oldWidget.isAlphabetsFiltered != widget.isAlphabetsFiltered) {
       _list.clear();
       firstIndexPosition.clear();
       init();
@@ -168,8 +167,7 @@ class _AlphabetScrollViewState extends State<AlphabetScrollView> {
   /// on each Scroll.
   void calculateFirstIndex() {
     _filteredAlphabets.forEach((letter) {
-      AlphaModel? firstElement = _list.firstWhereOrNull(
-          (item) => item.key.toLowerCase().startsWith(letter));
+      AlphaModel? firstElement = _list.firstWhereOrNull((item) => item.key.toLowerCase().startsWith(letter));
       if (firstElement != null) {
         int index = _list.indexOf(firstElement);
         firstIndexPosition[letter] = index;
@@ -181,10 +179,10 @@ class _AlphabetScrollViewState extends State<AlphabetScrollView> {
     int index = firstIndexPosition[_filteredAlphabets[x].toLowerCase()]!;
     final scrollToPostion = widget.itemExtent * index;
     if (index != null) {
-      listController.animateTo((scrollToPostion),
-          duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+      listController.animateTo((scrollToPostion), duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     }
     positionNotifer.value = offset;
+    HapticFeedback.vibrate();
   }
 
   void onVerticalDrag(Offset offset) {
@@ -214,9 +212,7 @@ class _AlphabetScrollViewState extends State<AlphabetScrollView> {
                   child: widget.itemBuilder(_, x, _list[x].key));
             }),
         Align(
-          alignment: widget.alignment == LetterAlignment.left
-              ? Alignment.centerLeft
-              : Alignment.centerRight,
+          alignment: widget.alignment == LetterAlignment.left ? Alignment.centerLeft : Alignment.centerRight,
           child: Container(
             key: key,
             padding: const EdgeInsets.symmetric(horizontal: 2),
@@ -236,20 +232,18 @@ class _AlphabetScrollViewState extends State<AlphabetScrollView> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: List.generate(
                             _filteredAlphabets.length,
-                            (x) => GestureDetector(
+                            (x) => InkWell(
+                              splashColor: Colors.transparent,
                               key: x == selected ? letterKey : null,
                               onTap: () {
                                 _selectedIndexNotifier.value = x;
                                 scrolltoIndex(x, positionNotifer.value);
                               },
                               child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 2),
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
                                 child: Text(
                                   _filteredAlphabets[x].toUpperCase(),
-                                  style: selected == x
-                                      ? widget.selectedTextStyle
-                                      : widget.unselectedTextStyle,
+                                  style: selected == x ? widget.selectedTextStyle : widget.unselectedTextStyle,
                                   // style: TextStyle(
                                   //     fontSize: 12,
                                   //     fontWeight: selected == x
@@ -268,18 +262,14 @@ class _AlphabetScrollViewState extends State<AlphabetScrollView> {
             ? Container()
             : ValueListenableBuilder<Offset>(
                 valueListenable: positionNotifer,
-                builder:
-                    (BuildContext context, Offset position, Widget? child) {
+                builder: (BuildContext context, Offset position, Widget? child) {
                   return Positioned(
-                      right:
-                          widget.alignment == LetterAlignment.right ? 40 : null,
-                      left:
-                          widget.alignment == LetterAlignment.left ? 40 : null,
+                      right: widget.alignment == LetterAlignment.right ? 40 : null,
+                      left: widget.alignment == LetterAlignment.left ? 40 : null,
                       top: position.dy,
                       child: widget.overlayWidget == null
                           ? Container()
-                          : widget.overlayWidget!(_filteredAlphabets[
-                              _selectedIndexNotifier.value]));
+                          : widget.overlayWidget!(_filteredAlphabets[_selectedIndexNotifier.value]));
                 })
       ],
     );
