@@ -1,7 +1,7 @@
 import 'package:alphabet_scroll_view/src/meta.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:vibration/vibration.dart';
 
 enum LetterAlignment { left, right }
 
@@ -175,14 +175,16 @@ class _AlphabetScrollViewState extends State<AlphabetScrollView> {
     });
   }
 
-  void scrolltoIndex(int x, Offset offset) {
+  void scrolltoIndex(int x, Offset offset) async {
     int index = firstIndexPosition[_filteredAlphabets[x].toLowerCase()]!;
     final scrollToPostion = widget.itemExtent * index;
     if (index != null) {
       listController.animateTo((scrollToPostion), duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     }
     positionNotifer.value = offset;
-    HapticFeedback.vibrate();
+    if (await Vibration.hasVibrator() ?? false) {
+      Vibration.vibrate(amplitude: 128, duration: 50);
+    }
   }
 
   void onVerticalDrag(Offset offset) {
