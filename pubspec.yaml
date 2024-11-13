@@ -12,12 +12,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  vibration: ^2.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   #pedantic: ">=1.10.0-nullsafety.3 <3.0.0"
   flutter_lints:
-  vibration: ^2.0.1
+
 
 
