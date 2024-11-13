@@ -182,8 +182,10 @@ class _AlphabetScrollViewState extends State<AlphabetScrollView> {
       listController.animateTo((scrollToPostion), duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     }
     positionNotifer.value = offset;
+
+    Vibration.cancel();
     if (await Vibration.hasVibrator() ?? false) {
-      Vibration.vibrate(amplitude: 128, duration: 50);
+      Vibration.vibrate(amplitude: 20, duration: 50);
     }
   }
 
@@ -220,7 +222,7 @@ class _AlphabetScrollViewState extends State<AlphabetScrollView> {
             padding: const EdgeInsets.symmetric(horizontal: 2),
             child: SingleChildScrollView(
               child: GestureDetector(
-                onVerticalDragStart: (z) => onVerticalDrag(z.localPosition),
+                // onVerticalDragStart: (z) => onVerticalDrag(z.localPosition),
                 onVerticalDragUpdate: (z) => onVerticalDrag(z.localPosition),
                 onVerticalDragEnd: (z) {
                   setState(() {
